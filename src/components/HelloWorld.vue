@@ -8,7 +8,7 @@
       </div>
       <div class="body-calculator">
         <div class="button clear" @click="clearScreen('0')">C</div>
-        <div class="button symbol">+/-</div>
+        <div class="button symbol" @click="operationSign()">+/-</div>
         <div class="button symbol" @click="percent()">%</div>
         <div class="button math" @click="operationDivide()">/</div>
         <div class="button" @click="mathNumber('7')">7</div>
@@ -24,7 +24,7 @@
         <div class="button" @click="mathNumber('3')">3</div>
         <div class="button math" @click="operationAdd()">+</div>
         <div class="button span2" @click="mathNumber('0')">0</div>
-        <div class="button">.</div>
+        <div class="button" @click="operationDot()">.</div>
         <div class="button result" @click="operationResult()">=</div>
       </div>
     </div>
@@ -69,12 +69,29 @@ export default {
       }
       this.value = `${parseFloat(this.value)/ 100}`
     },
+    operationDot() {
+      if(this.value.indexOf(".") < 0) {
+        this.value = this.value + '.'
+      }
+    },
+    operationSign() {
+      if(this.value.charAt(0) != '-') {
+        this.value = '-' + this.value
+      }
+    },
     operationAdd() {
       if(!this.readyToOperate) {
         this.readyToSwitch = false;
+        if (this.previous) {
+          this.value = `${this.operation(parseFloat(this.value), parseFloat(this.previous))}`;
+          this.previous = this.value
+          this.readyToOperate = true;
+          return
+        }
       }
       if(this.readyToOperate) {
         this.operation = (a,b) => a + b;
+        this.previous = this.value;
       }
       if(this.value && !this.readyToSwitch) {
         this.previous = this.value;
@@ -86,9 +103,16 @@ export default {
     operationRes() {
       if(!this.readyToOperate) {
         this.readyToSwitch = false;
+        if (this.previous) {
+          this.value = `${this.operation(parseFloat(this.value), parseFloat(this.previous))}`;
+          this.previous = this.value
+          this.readyToOperate = true;
+          return
+        }
       }
-      if(this.readyToOperate) {
+      if(this.readyToOperate && this.readyToSwitch) {
         this.operation = (a,b) => b - a;
+        this.previous = this.value
       }
       if(this.value && !this.readyToSwitch) {
         this.previous = this.value;
@@ -100,9 +124,16 @@ export default {
     operationMulti() {
       if(!this.readyToOperate) {
         this.readyToSwitch = false;
+        if (this.previous) {
+          this.value = `${this.operation(parseFloat(this.value), parseFloat(this.previous))}`;
+          this.previous = this.value
+          this.readyToOperate = true;
+          return
+        }
       }
       if(this.readyToOperate) {
         this.operation = (a,b) => a * b;
+        this.previous = this.value
       }
       if(this.value && !this.readyToSwitch) {
         this.previous = this.value;
@@ -114,9 +145,16 @@ export default {
     operationDivide() {
       if(!this.readyToOperate) {
         this.readyToSwitch = false;
+        if (this.previous) {
+          this.value = `${this.operation(parseFloat(this.value), parseFloat(this.previous))}`;
+          this.previous = this.value
+          this.readyToOperate = true;
+          return
+        }
       }
       if(this.readyToOperate) {
         this.operation = (a,b) => b / a;
+        this.previous = this.value
       }
       if(this.value && !this.readyToSwitch) {
         this.previous = this.value;
@@ -128,7 +166,13 @@ export default {
     operationResult() {
       if(this.value != "0" && this.previous) {
         this.value = `${this.operation(parseFloat(this.value), parseFloat(this.previous))}`;
-        this.previous = this.value
+        if(this.value.length > 15) {
+          this.value = parseFloat(this.value).toFixed(2).toString()
+          this.readyToOperate = true;
+        }
+        this.readyToOperate = true;
+      }else if(this.value === "0") {
+        this.value = `${this.operation(parseFloat(this.value), parseFloat(this.previous))}`;
         this.readyToOperate = true;
       }else if(!this.value) {
         this.value = this.previous;

@@ -20,6 +20,10 @@ body {
   border-radius: 2px;
   margin-top: 60px;
   overflow: hidden;
+  @media screen and (min-width: 700px) {
+    width: 450px;
+    padding: 5px;
+  }
 }
 .calculator-screen {
   width: 100%;
@@ -39,6 +43,9 @@ body {
   color: white;
   letter-spacing: 2px;
   text-align: right;
+  @media screen and (min-width: 700px) {
+    padding: 45px 10px
+  }
 }
 .longResult {
   font-size: 10px;
@@ -49,6 +56,10 @@ body {
   grid-auto-rows: minmax(70px, auto);
   grid-gap: 3px;
   padding: 5px;
+  @media screen and (min-width: 700px) {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    grid-auto-rows: minmax(90px, auto);
+  }
 }
 .button {
   width: 100%;
@@ -102,4 +113,7 @@ body {
   z-index: -1;
   width: 300px;
   opacity: .2;
+  @media screen and (min-width: 700px) {
+    width: 450px;
+  }
 }
